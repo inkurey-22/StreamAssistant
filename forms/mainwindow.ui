@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
+<ui version="6.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
@@ -1814,8 +1814,8 @@
      <addaction name="actionRound"/>
      <addaction name="actionTeams"/>
     </widget>
-    <addaction name="actionSet_Directories"/>
-    <addaction name="actionUpdate_Options"/>
+    <addaction name="actionSetDirectories"/>
+    <addaction name="actionUpdateOptions"/>
     <addaction name="menuShow"/>
    </widget>
    <addaction name="menuTest"/>
@@ -1825,12 +1825,12 @@
     <bool>true</bool>
    </property>
   </widget>
-  <action name="actionSet_Directories">
+  <action name="actionSetDirectories">
    <property name="text">
     <string>Set Directories</string>
    </property>
   </action>
-  <action name="actionUpdate_Options">
+  <action name="actionUpdateOptions">
    <property name="text">
     <string>Update Options</string>
    </property>

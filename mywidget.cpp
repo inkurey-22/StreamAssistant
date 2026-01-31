@@ -1,45 +1,53 @@
 #include "mywidget.h"
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
+#include <QDir>
+#include <QRandomGenerator>
+#include <QLabel>
+#include <QImage>
+#include <QPixmap>
 
-MyWidget::MyWidget(QString sec, QString fts)
-{
-    this->section = sec;
+MyWidget::MyWidget(QString sec, QString fts) {
+    this->section    = sec;
     this->fileToSave = fts;
 }
 
-Qtype MyWidget::convertType(QString typ)
-{
-    if (QString::compare(typ, "QLineEdit", Qt::CaseInsensitive)) return QLINEEDIT;
-    else if (QString::compare(typ, "QLabel", Qt::CaseInsensitive)) return QLABEL;
-    else if (QString::compare(typ, "QComboBox", Qt::CaseInsensitive)) return QCOMBOBOX;
-    else if (QString::compare(typ, "QSpinBox", Qt::CaseInsensitive)) return QSPINBOX;
-    else if (QString::compare(typ, "QCheckBox", Qt::CaseInsensitive)) return QCHECKBOX;
-    else if (QString::compare(typ, "QRadioButton", Qt::CaseInsensitive)) return QRADIOBUTTON;
-    else if (QString::compare(typ, "QPlainTextEdit", Qt::CaseInsensitive)) return QPLAINTEXTEDIT;
+Qtype MyWidget::convertType(QString typ) {
+    if (QString::compare(typ, "QLineEdit", Qt::CaseInsensitive))
+        return QLINEEDIT;
+    else if (QString::compare(typ, "QLabel", Qt::CaseInsensitive))
+        return QLABEL;
+    else if (QString::compare(typ, "QComboBox", Qt::CaseInsensitive))
+        return QCOMBOBOX;
+    else if (QString::compare(typ, "QSpinBox", Qt::CaseInsensitive))
+        return QSPINBOX;
+    else if (QString::compare(typ, "QCheckBox", Qt::CaseInsensitive))
+        return QCHECKBOX;
+    else if (QString::compare(typ, "QRadioButton", Qt::CaseInsensitive))
+        return QRADIOBUTTON;
+    else if (QString::compare(typ, "QPlainTextEdit", Qt::CaseInsensitive))
+        return QPLAINTEXTEDIT;
     return QLINEEDIT;
 }
 
-QString MyWidget::getSection()
-{
+QString MyWidget::getSection() {
     return this->section;
 }
 
-QString MyWidget::getFileToSave()
-{
+QString MyWidget::getFileToSave() {
     return this->fileToSave;
 }
 
-void MyWidget::setSection(QString sec)
-{
+void MyWidget::setSection(QString sec) {
     this->section = sec;
 }
 
-void MyWidget::setFileToSave(QString fts)
-{
-    this->fileToSave= fts;
+void MyWidget::setFileToSave(QString fts) {
+    this->fileToSave = fts;
 }
 
-void MyWidget::writeInFile(QString filename, QString text)
-{
+void MyWidget::writeInFile(QString filename, QString text) {
     QFile file(filename);
     if (file.open(QFile::WriteOnly | QFile::Text)) {
         QTextStream out(&file);
@@ -51,8 +59,7 @@ void MyWidget::writeInFile(QString filename, QString text)
     }
 }
 
-QString MyWidget::findImageWithExtension(QString filename)
-{
+QString MyWidget::findImageWithExtension(QString filename) {
     if (filename.last(1) == "/") {
         return "";
     }
@@ -70,24 +77,21 @@ QString MyWidget::findImageWithExtension(QString filename)
     return "";
 }
 
-void MyWidget::copyFile(QString source, QString destiny)
-{
+void MyWidget::copyFile(QString source, QString destiny) {
     QFile::remove(destiny);
     QFile::copy(source, destiny);
     updateFileTimestamp(destiny);
     return;
 }
 
-MyWidget::~MyWidget()
-{
+MyWidget::~MyWidget() {
     return;
 }
 
-QString MyWidget::getRandomImageName(QString defaultDir)
-{
-    QDir directory(defaultDir);
+QString MyWidget::getRandomImageName(QString defaultDir) {
+    QDir        directory(defaultDir);
     QStringList imagesList = directory.entryList(QDir::Files);
-    int max = imagesList.size();
+    int         max        = imagesList.size();
     QRandomGenerator::global()->generate();
     if (max > 0) {
         int picked = QRandomGenerator::global()->bounded(max);
@@ -98,24 +102,22 @@ QString MyWidget::getRandomImageName(QString defaultDir)
     return "Nenhuma imagem padrão para escolher";
 }
 
-void MyWidget::showImageInLabel(QString imageName, QLabel *logo, Qt::AspectRatioMode aspectRatioMode, bool mirrored)
-{
+void MyWidget::showImageInLabel(QString imageName, QLabel* logo, Qt::AspectRatioMode aspectRatioMode, bool mirrored) {
     QImage image;
-    bool valid = image.load(imageName);
+    bool   valid = image.load(imageName);
     if (valid) {
         image = image.scaled(logo->width(), logo->height(), aspectRatioMode, Qt::SmoothTransformation);
         if (mirrored) {
-            image.mirror(1, 1);
+            image = image.flipped(Qt::Horizontal | Qt::Vertical);
         }
         logo->setPixmap(QPixmap::fromImage(image));
-        logo->setScaledContents( true );
+        logo->setScaledContents(true);
     } else {
         qDebug() << "couldn't load image " + imageName;
     }
 }
 
-void MyWidget::ignoreAspectInLabel(QString imageName, QLabel *logo, bool mirrored)
-{
+void MyWidget::ignoreAspectInLabel(QString imageName, QLabel* logo, bool mirrored) {
     if (mirrored) {
         showImageInLabel(imageName, logo, Qt::IgnoreAspectRatio, mirrored);
     } else {
@@ -123,8 +125,7 @@ void MyWidget::ignoreAspectInLabel(QString imageName, QLabel *logo, bool mirrore
     }
 }
 
-void MyWidget::keepAspectInLabel(QString imageName, QLabel *logo, bool mirrored)
-{
+void MyWidget::keepAspectInLabel(QString imageName, QLabel* logo, bool mirrored) {
     if (mirrored) {
         showImageInLabel(imageName, logo, Qt::KeepAspectRatio, mirrored);
     } else {
@@ -132,15 +133,14 @@ void MyWidget::keepAspectInLabel(QString imageName, QLabel *logo, bool mirrored)
     }
 }
 
-void MyWidget::updateFileTimestamp(QString filePath)
-{
+void MyWidget::updateFileTimestamp(QString filePath) {
     QFile file(filePath);
     if (!file.open(QIODevice::ReadWrite)) {
         return;
     }
     const quint64 size = file.size();
     file.seek(size);
-    file.write( QByteArray(1, '0') );
+    file.write(QByteArray(1, '0'));
     file.resize(size);
     return;
 }

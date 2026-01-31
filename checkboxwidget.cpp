@@ -1,12 +1,14 @@
 #include "checkboxwidget.h"
+#include <QFile>
+#include <QTextStream>
+#include <QCheckBox>
 
-CheckBoxWidget::CheckBoxWidget(QString sec, QString fts): MyWidget(sec, fts) {}
+CheckBoxWidget::CheckBoxWidget(QString sec, QString fts) : MyWidget(sec, fts) {}
 
-void CheckBoxWidget::init(QString importingDir, QWidget *wid, QString teamName)
-{
-    QCheckBox *checkBox = (QCheckBox *)wid;
-    QFile file(importingDir + this->getSection() + this->getFileToSave() + ".txt");
-    QString text;
+void CheckBoxWidget::init(QString importingDir, QWidget* wid, QString teamName) {
+    QCheckBox* checkBox = (QCheckBox*)wid;
+    QFile      file(importingDir + this->getSection() + this->getFileToSave() + ".txt");
+    QString    text;
     if (file.open(QFile::ReadOnly | QFile::Text)) {
         QTextStream in(&file);
         text = in.readAll();
@@ -19,22 +21,21 @@ void CheckBoxWidget::init(QString importingDir, QWidget *wid, QString teamName)
     }
 }
 
-void CheckBoxWidget::handleCheck(QString importingDir, QWidget *wid, QString teamDir, QString winPointsDir)
-{
-    QCheckBox *widget = (QCheckBox *) wid;
-    QString imageFile = importingDir + this->getSection() + this->getFileToSave();
-    QString nameFile = imageFile + ".txt";
-    QString teamPointsDir = winPointsDir + teamDir;
-    QString savingDir = importingDir + "/set/winPoints/";
+void CheckBoxWidget::handleCheck(QString importingDir, QWidget* wid, QString teamDir, QString winPointsDir) {
+    QCheckBox* widget        = (QCheckBox*)wid;
+    QString    imageFile     = importingDir + this->getSection() + this->getFileToSave();
+    QString    nameFile      = imageFile + ".txt";
+    QString    teamPointsDir = winPointsDir + teamDir;
+    QString    savingDir     = importingDir + "/set/winPoints/";
     if (widget->isChecked()) {
         QString teamImage = importingDir + teamDir + "logo";
-        QString teamName = importingDir + teamDir + "name.txt";
+        QString teamName  = importingDir + teamDir + "name.txt";
         this->copyFile(teamImage, imageFile);
         this->copyFile(teamName, nameFile);
         // Copy winpoints
         QString winPointFile;
         QString savingPointFile;
-        QDir directory(teamPointsDir);
+        QDir    directory(teamPointsDir);
         if (directory.exists()) {
             QStringList winPointsList = directory.entryList(QDir::Files);
             for (int i = 0; i < winPointsList.size(); ++i) {
@@ -55,10 +56,10 @@ void CheckBoxWidget::handleCheck(QString importingDir, QWidget *wid, QString tea
             QStringList search;
             search << this->getFileToSave() + "_*";
             QStringList filesList = directory.entryList(search, QDir::Files);
-            QFile toDelete;
+            QFile       toDelete;
             for (int i = 0; i < filesList.size(); ++i) {
                 toDelete.setFileName(savingDir + "/" + filesList.at(i));
-                toDelete.open(QFile::WriteOnly|QFile::Truncate);
+                (void)toDelete.open(QFile::WriteOnly | QFile::Truncate);
             }
         }
     }

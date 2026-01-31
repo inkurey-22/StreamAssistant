@@ -1,13 +1,17 @@
 #include "comboboxwidget.h"
+#include <QComboBox>
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
+#include <QIcon>
 
-ComboBoxWidget::ComboBoxWidget(QString sec, QString fts): MyWidget(sec, fts) {}
+ComboBoxWidget::ComboBoxWidget(QString sec, QString fts) : MyWidget(sec, fts) {}
 
-void ComboBoxWidget::init(QString importingDir, QWidget *wid, QString listDir)
-{
+void ComboBoxWidget::init(QString importingDir, QWidget* wid, QString listDir) {
     if (!listDir.isEmpty()) {
-        QComboBox *comboBox = (QComboBox *)wid;
-        QFile file(importingDir + this->getSection() + this->getFileToSave() + ".txt");
-        QString text;
+        QComboBox* comboBox = (QComboBox*)wid;
+        QFile      file(importingDir + this->getSection() + this->getFileToSave() + ".txt");
+        QString    text;
         // init the autocomplete list TODO
         const QStringList itemsList = this->getListOf(listDir);
         comboBox->addItems(itemsList);
@@ -25,11 +29,10 @@ void ComboBoxWidget::init(QString importingDir, QWidget *wid, QString listDir)
     }
 }
 
-void ComboBoxWidget::init(QString importingDir, QWidget *wid, QStringList list)
-{
-    QComboBox *comboBox = (QComboBox *)wid;
-    QFile file(importingDir + this->getSection() + this->getFileToSave() + ".txt");
-    QString text;
+void ComboBoxWidget::init(QString importingDir, QWidget* wid, QStringList list) {
+    QComboBox* comboBox = (QComboBox*)wid;
+    QFile      file(importingDir + this->getSection() + this->getFileToSave() + ".txt");
+    QString    text;
     comboBox->addItems(list);
     if (file.open(QFile::ReadOnly | QFile::Text)) {
         QTextStream in(&file);
@@ -41,11 +44,10 @@ void ComboBoxWidget::init(QString importingDir, QWidget *wid, QStringList list)
     file.close();
 }
 
-void ComboBoxWidget::init(QString importingDir, QWidget *wid, QStringList list, QString filename)
-{
-    QComboBox *comboBox = (QComboBox *)wid;
-    QFile file(filename);
-    QString text;
+void ComboBoxWidget::init(QString importingDir, QWidget* wid, QStringList list, QString filename) {
+    QComboBox* comboBox = (QComboBox*)wid;
+    QFile      file(filename);
+    QString    text;
     comboBox->addItems(list);
     if (file.open(QFile::ReadOnly | QFile::Text)) {
         QTextStream in(&file);
@@ -57,25 +59,22 @@ void ComboBoxWidget::init(QString importingDir, QWidget *wid, QStringList list, 
     file.close();
 }
 
-void ComboBoxWidget::saveInFile(QString importingDir, QWidget *wid)
-{
-    QComboBox *widget = (QComboBox *) wid;
+void ComboBoxWidget::saveInFile(QString importingDir, QWidget* wid) {
+    QComboBox* widget = (QComboBox*)wid;
     this->writeInFile(importingDir + this->getSection() + this->getFileToSave() + ".txt", widget->currentText());
 }
 
-void ComboBoxWidget::saveContentInFile(QString importingDir, QWidget *wid)
-{
-    QComboBox *widget = (QComboBox *) wid;
-    QString copyTo = importingDir + this->getSection() + this->getFileToSave();
-    QString nameToSave = widget->currentText();
+void ComboBoxWidget::saveContentInFile(QString importingDir, QWidget* wid) {
+    QComboBox* widget     = (QComboBox*)wid;
+    QString    copyTo     = importingDir + this->getSection() + this->getFileToSave();
+    QString    nameToSave = widget->currentText();
     this->writeInFile(copyTo + ".txt", nameToSave);
 }
 
-void ComboBoxWidget::saveInFile(QString importingDir, QWidget *wid, QString mode, QString local)
-{
-    QComboBox *widget = (QComboBox *) wid;
-    QString copyTo = importingDir + this->getSection() + this->getFileToSave();
-    QString nameToSave = local + "/" + widget->currentText();
+void ComboBoxWidget::saveInFile(QString importingDir, QWidget* wid, QString mode, QString local) {
+    QComboBox* widget     = (QComboBox*)wid;
+    QString    copyTo     = importingDir + this->getSection() + this->getFileToSave();
+    QString    nameToSave = local + "/" + widget->currentText();
     if (mode.compare("image") == 0) {
         nameToSave = this->findImageWithExtension(nameToSave);
         this->copyFile(nameToSave, copyTo);
@@ -85,11 +84,10 @@ void ComboBoxWidget::saveInFile(QString importingDir, QWidget *wid, QString mode
     this->writeInFile(copyTo + ".txt", nameToSave);
 }
 
-QStringList ComboBoxWidget::getListOf(QString dirString)
-{
+QStringList ComboBoxWidget::getListOf(QString dirString) {
     QStringList noExtensionList;
-    int lastPoint;
-    QDir directory(dirString);
+    int         lastPoint;
+    QDir        directory(dirString);
     QStringList completionList = directory.entryList(QDir::Files);
     for (int i = 0; i < completionList.size(); ++i) {
         lastPoint = completionList.at(i).lastIndexOf(".");
@@ -102,15 +100,14 @@ QStringList ComboBoxWidget::getListOf(QString dirString)
     return noExtensionList;
 }
 
-bool ComboBoxWidget::handleColorFile(QString colorFile, QString savingFile, QLabel *logo, bool &showedInAssistant, bool mirrored)
-{
+bool ComboBoxWidget::handleColorFile(QString colorFile, QString savingFile, QLabel* logo, bool& showedInAssistant, bool mirrored) {
     bool saved = false;
     if (QFile::exists(colorFile)) {
         if (!mirrored) {
             this->copyFile(colorFile, savingFile);
         } else {
             QImage toCopy(colorFile);
-            toCopy.mirror(1,1);
+            toCopy          = toCopy.flipped(Qt::Horizontal | Qt::Vertical);
             QString withExt = this->findImageWithExtension(savingFile);
             toCopy.save(withExt, nullptr, 100);
             this->copyFile(withExt, savingFile);
@@ -128,16 +125,15 @@ bool ComboBoxWidget::handleColorFile(QString colorFile, QString savingFile, QLab
     return saved;
 }
 
-bool ComboBoxWidget::saveColor(QString colorDir, QString color, QString dirToSave, QString fileToSave, QLabel *logo, bool mirrored)
-{
+bool ComboBoxWidget::saveColor(QString colorDir, QString color, QString dirToSave, QString fileToSave, QLabel* logo, bool mirrored) {
     QString colorFile;
     QString savingFile;
-    bool saved = false;
-    bool showedInAssistant = false;
+    bool    saved             = false;
+    bool    showedInAssistant = false;
     // for colors on colorDir
-    colorFile = this->findImageWithExtension(colorDir + color);
+    colorFile  = this->findImageWithExtension(colorDir + color);
     savingFile = dirToSave + fileToSave;
-    saved = handleColorFile(colorFile, savingFile, logo, showedInAssistant, mirrored);
+    saved      = handleColorFile(colorFile, savingFile, logo, showedInAssistant, mirrored);
     // for colors on //colorDir's subdirectories
     QDir directory(colorDir);
     if (directory.exists()) {
@@ -145,23 +141,22 @@ bool ComboBoxWidget::saveColor(QString colorDir, QString color, QString dirToSav
         dirList.removeFirst(); // Take .
         dirList.removeFirst(); // Take ..
         for (int i = 0; i < dirList.size(); ++i) {
-            colorFile = this->findImageWithExtension(colorDir + dirList.at(i) + "/" + color);
+            colorFile  = this->findImageWithExtension(colorDir + dirList.at(i) + "/" + color);
             savingFile = dirToSave + dirList.at(i) + "_" + fileToSave;
-            saved = handleColorFile(colorFile, savingFile, logo, showedInAssistant, mirrored);
+            saved      = handleColorFile(colorFile, savingFile, logo, showedInAssistant, mirrored);
         }
     }
     return saved;
 }
 
-void ComboBoxWidget::saveColors(QString importingDir, QWidget *wid, QString local, QLabel *alphaLabel, QLabel *bravoLabel, QLabel *comboLabel, bool mirrored)
-{
-    QComboBox *widget = (QComboBox *) wid;
-    QString color = widget->currentText();
-    QString colorNameFile = importingDir + this->getSection() + this->getFileToSave() + ".txt";
-    bool savedColorName = false;
-    QString alphaImportingDir = mirrored ? importingDir + "/teamBravo/" : importingDir + "/teamAlpha/";
-    QString bravoImportingDir = mirrored ? importingDir + "/teamAlpha/" : importingDir + "/teamBravo/";
-    if(this->saveColor(local + "/alpha/", color, alphaImportingDir, this->getFileToSave(), mirrored ? bravoLabel : alphaLabel)) {
+void ComboBoxWidget::saveColors(QString importingDir, QWidget* wid, QString local, QLabel* alphaLabel, QLabel* bravoLabel, QLabel* comboLabel, bool mirrored) {
+    QComboBox* widget            = (QComboBox*)wid;
+    QString    color             = widget->currentText();
+    QString    colorNameFile     = importingDir + this->getSection() + this->getFileToSave() + ".txt";
+    bool       savedColorName    = false;
+    QString    alphaImportingDir = mirrored ? importingDir + "/teamBravo/" : importingDir + "/teamAlpha/";
+    QString    bravoImportingDir = mirrored ? importingDir + "/teamAlpha/" : importingDir + "/teamBravo/";
+    if (this->saveColor(local + "/alpha/", color, alphaImportingDir, this->getFileToSave(), mirrored ? bravoLabel : alphaLabel)) {
         writeInFile(colorNameFile, color);
         savedColorName = true;
     }
@@ -171,8 +166,7 @@ void ComboBoxWidget::saveColors(QString importingDir, QWidget *wid, QString loca
             savedColorName = true;
         }
     }
-    if (this->saveColor(local + "/combo/", color, importingDir + this->getSection(), this->getFileToSave() + "s", comboLabel, mirrored) && !savedColorName)
-    {
+    if (this->saveColor(local + "/combo/", color, importingDir + this->getSection(), this->getFileToSave() + "s", comboLabel, mirrored) && !savedColorName) {
         if (!savedColorName) {
             writeInFile(colorNameFile, color);
             savedColorName = true;
@@ -184,11 +178,10 @@ void ComboBoxWidget::saveColors(QString importingDir, QWidget *wid, QString loca
     return;
 }
 
-void ComboBoxWidget::initPlayers(QString importingDir, QWidget *wid)
-{
-    QComboBox *comboBox = (QComboBox *)wid;
-    QString text;
-    QDir dir(importingDir + "/teamAlpha");
+void ComboBoxWidget::initPlayers(QString importingDir, QWidget* wid) {
+    QComboBox* comboBox = (QComboBox*)wid;
+    QString    text;
+    QDir       dir(importingDir + "/teamAlpha");
     if (wid->objectName().right(1).toInt() > 4) {
         dir.setPath(importingDir + "/teamBravo");
     }
@@ -203,7 +196,8 @@ void ComboBoxWidget::initPlayers(QString importingDir, QWidget *wid)
         if (file.open(QFile::ReadOnly | QFile::Text)) {
             QTextStream in(&file);
             text = in.readAll();
-            if (!text.isEmpty()) players << text;
+            if (!text.isEmpty())
+                players << text;
         } else {
             qDebug() << "Couldn't read file " + importingDir + this->getSection() + this->getFileToSave() + ".txt";
         }
@@ -214,7 +208,8 @@ void ComboBoxWidget::initPlayers(QString importingDir, QWidget *wid)
     if (file.open(QFile::ReadOnly | QFile::Text)) {
         QTextStream in(&file);
         text = in.readAll();
-        if (!text.isEmpty()) comboBox->setCurrentText(text);
+        if (!text.isEmpty())
+            comboBox->setCurrentText(text);
     } else {
         qDebug() << "Couldn't read file " + importingDir + "/set/players/" + wid->objectName().right(4) + ".txt: " + file.errorString();
     }

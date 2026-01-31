@@ -9,55 +9,54 @@
 #define dirAmount 12
 
 namespace Ui {
-class FilesDialog;
+    class FilesDialog;
 }
 
-class FilesDialog : public QDialog
-{
+class FilesDialog : public QDialog {
     Q_OBJECT
 
-signals:
+  signals:
     void allDone();
 
-public:
-    explicit FilesDialog(QWidget *parent = nullptr, QMap<QString, QString> *directoryFor = nullptr, QString *directories = nullptr);
+  public:
+    explicit FilesDialog(QWidget* parent = nullptr, QMap<QString, QString>* directoryFor = nullptr, QString* directories = nullptr);
     ~FilesDialog();
 
-private slots:
-    void on_AlphaTeamDirectoryHelp_clicked();
-    void on_BravoTeamDirectoryHelp_clicked();
-    void on_LogosDirectoryHelp_clicked();
-    void on_MapsDirectoryHelp_clicked();
-    void on_ModeIconsDirectoryHelp_clicked();
-    void on_SplatfestColorsDirectoryHelp_clicked();
-    void on_TurfWarColorsDirectoryHelp_clicked();
-    void on_RankedColorsDirectoryHelp_clicked();
-    void on_ImportingFilesDirectoryHelp_clicked();
-    void on_DefaultDirectoryHelp_clicked();
-    void on_WinPointsDirectoryHelp_clicked();
-    void on_WeaponsDirectoryHelp_clicked();
-    void on_AlphaTeamDirectoryFind_clicked();
-    void on_BravoTeamDirectoryFind_clicked();
-    void on_LogosDirectoryFind_clicked();
-    void on_MapsDirectoryFind_clicked();
-    void on_ModeIconsDirectoryFind_clicked();
-    void on_SplatfestColorsDirectoryFind_clicked();
-    void on_TurfWarColorsDirectoryFind_clicked();
-    void on_RankedColorsDirectoryFind_clicked();
-    void on_ImportingFilesDirectoryFind_clicked();
-    void on_DefaultDirectoryFind_clicked();
-    void on_WinPointsDirectoryFind_clicked();
-    void on_WeaponsDirectoryFind_clicked();
-    void on_DirectoriesDialogButtonBox_accepted();
+  private slots:
+    void onAlphaTeamDirectoryHelpClicked();
+    void onBravoTeamDirectoryHelpClicked();
+    void onLogosDirectoryHelpClicked();
+    void onMapsDirectoryHelpClicked();
+    void onModeIconsDirectoryHelpClicked();
+    void onSplatfestColorsDirectoryHelpClicked();
+    void onTurfWarColorsDirectoryHelpClicked();
+    void onRankedColorsDirectoryHelpClicked();
+    void onImportingFilesDirectoryHelpClicked();
+    void onDefaultDirectoryHelpClicked();
+    void onWinPointsDirectoryHelpClicked();
+    void onWeaponsDirectoryHelpClicked();
+    void onAlphaTeamDirectoryFindClicked();
+    void onBravoTeamDirectoryFindClicked();
+    void onLogosDirectoryFindClicked();
+    void onMapsDirectoryFindClicked();
+    void onModeIconsDirectoryFindClicked();
+    void onSplatfestColorsDirectoryFindClicked();
+    void onTurfWarColorsDirectoryFindClicked();
+    void onRankedColorsDirectoryFindClicked();
+    void onImportingFilesDirectoryFindClicked();
+    void onDefaultDirectoryFindClicked();
+    void onWinPointsDirectoryFindClicked();
+    void onWeaponsDirectoryFindClicked();
+    void onDirectoriesDialogButtonBox_accepted();
 
-private:
-    Ui::FilesDialog *ui;
-    QMap<QString, QString> *directoryFor;
-    QLineEdit *fields[dirAmount];
-    QString directories[dirAmount];
-    int saveConfigDirectory(QString, QLineEdit*);
-    void directories_init(QString *);
-    void makeDefaultDir(QLineEdit *field, QString configFile, QString configDir);
+  private:
+    Ui::FilesDialog*        ui;
+    QMap<QString, QString>* directoryFor;
+    QLineEdit*              fields[dirAmount];
+    QString                 directories[dirAmount];
+    int                     saveConfigDirectory(QString, QLineEdit*);
+    void                    directoriesInit(QString*);
+    void                    makeDefaultDir(QLineEdit* field, QString configFile, QString configDir);
 };
 
 #endif // FILESDIALOG_H
